@@ -1,0 +1,5 @@
+Description:
+    Generates level_up model & migration
+
+Example:
+    rails generate level_up
