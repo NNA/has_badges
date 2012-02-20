@@ -1,7 +1,11 @@
 require 'bundler/gem_tasks'
 require 'rake/testtask'
 
-Rake::TestTask.new do |t|
+desc 'Default: run tests'
+task :default => :test
+
+desc 'Test the level_up gem'
+Rake::TestTask.new(:test) do |t|
   t.libs << 'lib'
   t.test_files = FileList['spec/**/*_spec.rb']	
   t.verbose = true
