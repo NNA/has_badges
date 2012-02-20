@@ -25,8 +25,8 @@ rails g level_up
 ### Increase / Decrease number of points of a user
 You can add points to given resource using :
 ``` ruby
-  @user.earn 70, euros
   @user.earn 70
+  @user.earn 70, euros
 ```
 by default points currency is used
 

@@ -23,9 +23,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'minitest'
   s.add_development_dependency 'guard'
   s.add_development_dependency 'guard-minitest'
-  s.add_development_dependency 'spork'
-  s.add_development_dependency 'spork-testunit'
-  s.add_development_dependency 'guard-spork'
+  s.add_development_dependency 'libnotify'
   
   s.add_runtime_dependency "rails"
 end
