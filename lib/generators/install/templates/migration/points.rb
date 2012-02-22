@@ -1,13 +1,13 @@
-class CreatePoints < ActiveRecord::Migration
+class Create<%= plural_camel_case point_name %> < ActiveRecord::Migration
   def change
-    create_table :<%= point_name.downcase.pluralize %> do |t|
+    create_table :<%= plural_lower_case point_name %> do |t|
       t.integer :amount
-      t.integer :<%= user_name.downcase %>_id
+      t.integer :<%= singular_lower_case user_name %>_id
       t.datetime :date
 
       t.timestamps
     end
 
-    add_index :<%= point_name.downcase.pluralize %>, :<%= user_name.downcase %>_id
+    add_index :<%= plural_lower_case point_name %>, :<%= singular_lower_case user_name %>_id
   end
 end

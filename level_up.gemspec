@@ -24,6 +24,9 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'guard'
   s.add_development_dependency 'guard-minitest'
   s.add_development_dependency 'libnotify'
+  s.add_development_dependency 'activerecord'
+  s.add_development_dependency 'activesupport'
+  s.add_development_dependency 'sqlite3-ruby'
   
-  s.add_runtime_dependency "rails"
+  s.add_runtime_dependency 'rails'
 end

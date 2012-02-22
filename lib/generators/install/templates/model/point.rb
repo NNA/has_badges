@@ -1,4 +1,4 @@
-class Points < ActiveRecord::Base
+class Point < ActiveRecord::Base
   # new columns need to be added here to be writable through mass assignment
   attr_accessible :amount
 
