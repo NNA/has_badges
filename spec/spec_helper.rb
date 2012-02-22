@@ -13,10 +13,6 @@ load(File.dirname(__FILE__) + '/schema.rb')
 
 class Helper  
   
-  def self.before_all &block
-    yield
-  end
-
   def self.clean_data
     User.destroy_all
     Badge.destroy_all
@@ -35,11 +31,5 @@ class Helper
     UserBadge.create({:user_id  => self.create_user({:login => 'user_name1'}),
     			            :badge_id => self.create_badge({:name  => 'badge_name1'})}.merge(options))
   end
-#   # def create_message(options = {})
-#   #   return Message.create({:sender => @george,
-#   #                          :recipient => @jerry,
-#   #                          :subject => "Frolf, Jerry!",
-#   #                          :body => "Frolf, Jerry! Frisbee golf!"}.merge(options))
-#   # end
   
 end
