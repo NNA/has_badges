@@ -22,18 +22,18 @@ rails g level_up
 
 ## How To:
 
-### Increase / Decrease number of points of a user
+### Increase number of points of a user
 You can add points to given resource using :
 ``` ruby
-  @user.earn 70
-  @user.earn 70, euros
+  @user.earns 70
+  @user.earns 70, euros
 ```
 by default points currency is used
 
 ### Know user's badges
 ``` ruby
 @user.badges #returns an array of badges
-@user.has_badge? 'lord of rings' # true or false
+@user.has_badge? 'Serial Killer' # true or false
 ```
 
 ### Know user's badge activity
@@ -41,6 +41,7 @@ by default points currency is used
 
 
 ## TODO
+ - Add a cache column to avoid querying database to know one's user badges
  - Skip model, migrations, etc... in generators
  - Make an engine
 

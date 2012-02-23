@@ -19,10 +19,10 @@ module LevelUp
                    :through => :user_badges,
                    :class_name => options[:class_name],
                    :foreign_key => 'user_id'
-                   
+
           extend ClassMethods 
           include InstanceMethods 
-        end 
+        end
         self.options = options
       end
     end
@@ -33,7 +33,8 @@ module LevelUp
 
     module InstanceMethods
       def has_badge? badge_name
-        UserBadge.where(:user_id => self.id, :badge_id => Badge.find_by_name(badge_name).try(:id)).count == 1
+        # UserBadge.where(:user_id => self.id, :badge_id => Badge.find_by_name(badge_name).try(:id)).count == 1
+        !self.badges.where(:name => badge_name).empty?
       end
     end 
   end
