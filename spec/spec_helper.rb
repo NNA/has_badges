@@ -33,5 +33,9 @@ class Helper
     UserBadge.create({:user_id  => 1,
     			            :badge_id => 1}.merge(options))
   end
+
+  def self.create_user_point(options = {})
+    Point.create({:user_id  => 1, :amount => 1}.merge(options))
+  end
   
 end

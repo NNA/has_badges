@@ -13,8 +13,7 @@ module HasBadges
           table_name = options[:class_name].constantize.table_name
           
           has_many :point_logs,
-                   :class_name => 'Point',
-                   :foreign_key => 'user_id'
+                   :class_name => 'Point'
 
           has_many :user_badges,
                    :foreign_key => 'user_id'
@@ -41,9 +40,9 @@ module HasBadges
         !self.badges.where(:name => badge_name).empty?
       end
 
-      def points
-        self.point_logs.sum(:amount)
-      end
+      # def points
+      #   self.point_logs.sum(:amount)
+      # end
     end 
   end
 end

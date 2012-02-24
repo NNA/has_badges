@@ -40,6 +40,7 @@ by default points currency is used
  - Add points_log & earns method to has_badges extension
  - Define achievements (model, generators)
  - Trigger badge awarding when user complete achievement
+ - Test: Refactor avoid duplication of model definition in fixture
  - Test: Refactor before each code as SpecHelper method
  - Release v0.0.1 of gem to RubyForge
  - Add a cache column to avoid querying database to know one's user badges
