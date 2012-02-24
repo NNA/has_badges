@@ -12,6 +12,10 @@ module LevelUp
           class_attribute :options
           table_name = options[:class_name].constantize.table_name
           
+          has_many :point_logs,
+                   :class_name => 'Point',
+                   :foreign_key => 'user_id'
+
           has_many :user_badges,
                    :foreign_key => 'user_id'
 
@@ -35,6 +39,10 @@ module LevelUp
       def has_badge? badge_name
         # UserBadge.where(:user_id => self.id, :badge_id => Badge.find_by_name(badge_name).try(:id)).count == 1
         !self.badges.where(:name => badge_name).empty?
+      end
+
+      def points
+        self.point_logs.sum(:amount)
       end
     end 
   end

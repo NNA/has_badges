@@ -11,7 +11,9 @@ fixture_path = File.dirname(__FILE__) + '/fixtures/'
 ActiveSupport::Dependencies.autoload_paths << fixture_path
 load(File.dirname(__FILE__) + '/schema.rb')
 
-class Helper  
+class Helper
+  
+  @@data_cache = {}
   
   def self.clean_data
     User.destroy_all
@@ -20,16 +22,16 @@ class Helper
   end
 
   def self.create_user(options = {})
-    User.create({:login => "Nicolas"}.merge(options))
+    User.create({:login => "user_name1"}.merge(options))
   end
 
   def self.create_badge(options = {})
-    Badge.create({:name => "Newbie"}.merge(options))
+    Badge.create({:name => "badge_name1"}.merge(options))
   end
 
   def self.create_user_badge(options = {})
-    UserBadge.create({:user_id  => self.create_user({:login => 'user_name1'}),
-    			            :badge_id => self.create_badge({:name  => 'badge_name1'})}.merge(options))
+    UserBadge.create({:user_id  => 1,
+    			            :badge_id => 1}.merge(options))
   end
   
 end

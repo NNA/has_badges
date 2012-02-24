@@ -18,4 +18,11 @@ ActiveRecord::Schema.define(:version => 2) do
     t.datetime "updated_at"
   end
 
+  create_table "points", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "amount"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
 end
