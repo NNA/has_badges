@@ -22,7 +22,13 @@ rails g has_badges
 
 ## How To:
 
-### Increase number of points of a user
+### Know user's badges
+``` ruby
+@user.badges #returns an array of badges
+@user.has_badge? 'Serial Killer' # true or false
+```
+
+### Increase number of points of a user (to be done...)
 You can add points to given resource using :
 ``` ruby
   @user.earns 70
@@ -30,17 +36,12 @@ You can add points to given resource using :
 ```
 by default points currency is used
 
-### Know user's badges
-``` ruby
-@user.badges #returns an array of badges
-@user.has_badge? 'Serial Killer' # true or false
-```
-
-### Know user's badge activity
-
-
-
 ## TODO
+ - Add points_log & earns method to has_badges extension
+ - Define achievements (model, generators)
+ - Trigger badge awarding when user complete achievement
+ - Test: Refactor before each code as SpecHelper method
+ - Release v0.0.1 of gem to RubyForge
  - Add a cache column to avoid querying database to know one's user badges
  - Skip model, migrations, etc... in generators
  - Make an engine
