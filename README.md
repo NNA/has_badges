@@ -1,4 +1,4 @@
-# Level up - Upgrade 
+# Has badges - Badges and Achievements for Rails
 
 The purpose of this tool is to ....
 
@@ -6,19 +6,19 @@ The purpose of this tool is to ....
 1) Install gem
 
 ``` ruby
-gem install level_up
+gem install has_badges
 ```
 
 OR in your Gemfile (if using Bundler):
 
 ``` ruby
-gem 'level_up', :git=>'https://github.com/NNA/level_up'
+gem 'has_badges', :git=>'https://github.com/NNA/has_badges'
 ```
 
 Run the generators:
 
 ``` ruby
-rails g level_up
+rails g has_badges
 
 ## How To:
 

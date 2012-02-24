@@ -1,5 +1,5 @@
 Description:
-    Generates level_up model & migration
+    Generates has_badges model & migration
 
 Example:
-    rails generate level_up
+    rails generate has_badges

@@ -1,10 +1,10 @@
 require 'rails/generators'
 require 'rails/generators/active_record'
 
-class LevelUpGenerator < Rails::Generators::Base
+class HasBadgesGenerator < Rails::Generators::Base
   include Rails::Generators::Migration
   
-  desc "This generator creates Models, migrations used by level_up"
+  desc "This generator creates Models, migrations used by has_badges"
   source_root File.expand_path('../templates', __FILE__)
   
   argument :user_name, :type => :string, :default => 'User', :banner => 'Name of model that will have badges (default: User)'

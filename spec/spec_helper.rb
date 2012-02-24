@@ -3,7 +3,7 @@ require 'active_record'
 require 'active_support'
 require 'minitest/autorun'
 
-require File.dirname(__FILE__) + '/../lib/level_up/has_badges_extensions'
+require File.dirname(__FILE__) + '/../lib/has_badges/has_badges_extensions'
 
 ActiveRecord::Base.configurations = YAML::load(IO.read(File.dirname(__FILE__) + '/database.yml'))
 ActiveRecord::Base.establish_connection(ENV['DB'] || 'sqlite3')

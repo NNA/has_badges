@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 
-# Specify your gem's dependencies in level_up.gemspec
+# Specify your gem's dependencies in has_badges.gemspec
 gemspec
 
 group :development do

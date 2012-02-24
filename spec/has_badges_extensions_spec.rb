@@ -1,6 +1,6 @@
 require 'minitest/spec'
 require 'minitest/autorun'
-require  File.join(Dir.pwd,"lib/level_up")
+require  File.join(Dir.pwd,"lib/has_badges")
 require 'spec_helper'
 
 describe 'User with badges_extensions' do

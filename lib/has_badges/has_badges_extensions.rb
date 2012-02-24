@@ -1,4 +1,4 @@
-module LevelUp
+module HasBadges
   module HasBadgesExtensions
     def self.included(base)
       base.extend ActMethods
@@ -50,6 +50,6 @@ end
 
 if defined? ActiveRecord
   ActiveRecord::Base.class_eval do
-    include LevelUp::HasBadgesExtensions
+    include HasBadges::HasBadgesExtensions
   end
 end
