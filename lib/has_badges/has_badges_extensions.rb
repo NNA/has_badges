@@ -40,9 +40,9 @@ module HasBadges
         !self.badges.where(:name => badge_name).empty?
       end
 
-      # def points
-      #   self.point_logs.sum(:amount)
-      # end
+      def points
+        self.point_logs.sum(:amount)
+      end
     end 
   end
 end

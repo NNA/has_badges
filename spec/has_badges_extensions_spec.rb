@@ -5,9 +5,9 @@ require 'spec_helper'
 
 describe 'User with badges_extensions' do
 
-	let :user_without_badges do
-	  user_without_badges = Helper.create_user(:login => 'user_with_no_badge')
-	  { :user_without_badges => user_without_badges }
+	let :user do
+	  user = Helper.create_user(:login => 'user_with_no_badge')
+	  { :user => user }
 	end
 
 	let :user_with_newbie_badge do
@@ -24,7 +24,7 @@ describe 'User with badges_extensions' do
   end
 
   before do
-    %w(user_without_badges user_with_newbie_badge user_with_ten_points).each do |context|
+    %w(user user_with_newbie_badge user_with_ten_points).each do |context|
       if (cache = Helper.class_variable_get("@@data_cache"))[context.to_sym].nil?
         Helper.class_variable_set("@@data_cache", cache.merge({context.to_sym => eval(context)}))
       end
@@ -40,7 +40,7 @@ describe 'User with badges_extensions' do
     end
 
     it 'must return an empty array if user has no badges' do
-      @user_without_badges.badges.must_equal []
+      @user.badges.must_equal []
     end
   end
 
@@ -52,13 +52,13 @@ describe 'User with badges_extensions' do
       @user_with_newbie_badge.has_badge?('FakeBadge').must_equal false
     end
     it 'must return false if user has no badges' do
-      @user_without_badges.has_badge?('Newbie').must_equal false
+      @user.has_badge?('Newbie').must_equal false
     end
   end
   
   describe :points_log do
     it "must return an empty array if user has no point logs" do
-      @user_without_badges.point_logs.must_equal []
+      @user.point_logs.must_equal []
     end
     it "must return an array of points log if user has earned points" do
       @user_with_ten_points.point_logs.must_equal [@ten_points]
@@ -66,8 +66,16 @@ describe 'User with badges_extensions' do
   end
 
   describe :points do
-    it 'must do something' do
-      skip 'to_be_done'
+    it 'must return 0 if user has no points' do
+      @user.points.must_equal 0
+    end
+    it 'must return 15 if user has 10 + 5 points in his history' do
+      begin
+        five_extra_points = Helper.create_user_point(:user_id => @user_with_ten_points.id, :amount => 5)
+        @user_with_ten_points.points.must_equal 15
+      ensure
+        five_extra_points.destroy if five_extra_points
+      end
     end
   end
 
