@@ -6,8 +6,13 @@ require File.dirname(__FILE__) + '/../lib/has_badges/has_badges_extensions'
 
 ActiveRecord::Base.configurations = YAML::load(IO.read(File.dirname(__FILE__) + '/database.yml'))
 ActiveRecord::Base.establish_connection(ENV['DB'] || 'sqlite3')
+
+model_path = File.dirname(__FILE__) + '/../lib/generators/install/templates/model/'
+ActiveSupport::Dependencies.autoload_paths << model_path
+
 fixture_path = File.dirname(__FILE__) + '/fixtures/'
 ActiveSupport::Dependencies.autoload_paths << fixture_path
+
 load(File.dirname(__FILE__) + '/schema.rb')
 
 class Helper

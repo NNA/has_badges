@@ -23,7 +23,7 @@ rails g has_badges
 ## How To:
 
 ### Give points
-You can reward a given resource with points :
+You can reward a given resource with points:
 ``` ruby
 @user.wins 70
 @user.wins 70, 'Helping a friend'   # reason is facultative
@@ -52,7 +52,6 @@ by doing this the number of points defined for this milestone are added to user'
 ## TODO
  - Define achievements (model, generators)
  - Trigger badge awarding when user complete achievement
- - Test: Refactor avoid duplication of model definition in fixture
  - Test: Refactor before each code as SpecHelper method
  - Release v0.0.1 of gem to RubyForge
  - Add a cache column to avoid querying database to know one's user badges
