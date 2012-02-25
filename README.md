@@ -19,10 +19,10 @@ Run the generators:
 
 ``` ruby
 rails g has_badges
-
+```
 ## How To:
 
-### Reward a user for achievements by giving him points
+### Give points
 You can reward a given resource with points :
 ``` ruby
   @user.wins 70
@@ -33,7 +33,7 @@ You can also remove points :
   @user.looses 70, 'Spamming 3 users' # reason is facultative
 ```
 
-
+### Achieve milestones 
 You can also reward a resource after reaching a milestone :
 ``` ruby
   @user.achieved 'Registration'     	# set user registration milestone
