@@ -3,7 +3,7 @@
 WARNING: This gem is still much work in progress and is not production ready.
 
 ## Install:
-1) Install gem
+1 - Install gem
 
 ``` ruby
 gem install has_badges
@@ -15,7 +15,7 @@ OR in your Gemfile (if using Bundler):
 gem 'has_badges', :git=>'https://github.com/NNA/has_badges'
 ```
 
-Run the generators:
+2 - Run the generators:
 
 ``` ruby
 rails g has_badges
@@ -28,6 +28,7 @@ You can reward a given resource with points :
 @user.wins 70
 @user.wins 70, 'Helping a friend'   # reason is facultative
 ```
+
 You can also remove points :
 ``` ruby
 @user.looses 70, 'Spamming 3 users' # reason is facultative
@@ -46,7 +47,6 @@ by doing this the number of points defined for this milestone are added to user'
 @user.has_badge? 'Serial Killer' 		# true or false
 @user.achievements                  	# a list of user achivements
 @user.achieved? :registration       	# true if user achieved the 'Registration' achievement 
-
 ```
 
 ## TODO
