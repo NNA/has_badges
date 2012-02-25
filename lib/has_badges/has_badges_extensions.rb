@@ -36,12 +36,19 @@ module HasBadges
 
     module InstanceMethods
       def has_badge? badge_name
-        # UserBadge.where(:user_id => self.id, :badge_id => Badge.find_by_name(badge_name).try(:id)).count == 1
         !self.badges.where(:name => badge_name).empty?
       end
 
       def points
         self.point_logs.sum(:amount)
+      end
+
+      def wins amount, reason=nil
+        Point.create(:user_id => self.id, :amount => amount, :reason => reason, :date => Time.now )
+      end
+
+      def looses amount, reason=nil
+        self.wins (-amount).to_i, reason
       end
     end 
   end

@@ -1,9 +1,11 @@
 class Point < ActiveRecord::Base
   belongs_to :user
 
-  # new columns need to be added here to be writable through mass assignment
-  attr_accessible :amount
-  attr_accessible :user_id
+  attr_accessible :user_id,
+  				  :amount,
+  				  :reason,
+  				  :date
 
-  validates_presence_of :amount
+  validates_presence_of :amount,
+  						:date
 end

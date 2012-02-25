@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
   # specify any dependencies here; for example:
   s.add_development_dependency "rails"
   s.add_development_dependency 'minitest'
+  s.add_development_dependency 'mocha', '~> 0.10.4'
   s.add_development_dependency 'guard'
   s.add_development_dependency 'guard-minitest'
   s.add_development_dependency 'libnotify'

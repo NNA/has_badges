@@ -1,5 +1,6 @@
 require 'minitest/spec'
 require 'minitest/autorun'
+require 'mocha'
 require  File.join(Dir.pwd,"lib/has_badges")
 require 'spec_helper'
 
@@ -70,6 +71,7 @@ describe 'User with badges_extensions' do
       @user.points.must_equal 0
     end
     it 'must return 15 if user has 10 + 5 points in his history' do
+      #TODO: refactor with Spec.only_for_this_test {five_extra_points = Helper.create ...)}
       begin
         five_extra_points = Helper.create_user_point(:user_id => @user_with_ten_points.id, :amount => 5)
         @user_with_ten_points.points.must_equal 15
@@ -79,11 +81,29 @@ describe 'User with badges_extensions' do
     end
   end
 
-  describe :earns do
-    it 'must add given number of points to the user' do
-      skip 'to_be_done'
-      # @nicolas.earns(30)
-      # @nicolas.points.must_equal 30
+  describe :wins do
+    it 'must add given number of points to the user and save reason why' do
+      Time.stubs(:now).returns('now')
+      Point.expects(:create).with(:user_id  => @user.id, 
+                                  :amount   => 30, 
+                                  :reason   => 'Giving back to open source',
+                                  :date     => 'now').returns(mock_points = mock('30_points'))
+      @user.wins(30, 'Giving back to open source').must_equal mock_points
+    end
+
+    it 'raise exception if no amount given' do
+      proc {@user.wins}.must_raise ArgumentError
+    end
+  end
+
+  describe :looses do
+    it 'should bahave like win except that points are negatively saved' do
+      Time.stubs(:now).returns('now')
+      Point.expects(:create).with(:user_id  => @user.id, 
+                                  :amount   => -10, 
+                                  :reason   => 'Spamming users',
+                                  :date     => 'now').returns(mock_points = mock('minus_10_points'))
+      @user.looses(10, 'Spamming users').must_equal mock_points
     end
   end
 

@@ -1,6 +1,6 @@
 # Has badges - Badges and Achievements for Rails
 
-The purpose of this tool is to ....
+WARNING: This gem is still much work in progress and is not production ready.
 
 ## Install:
 1) Install gem
@@ -22,22 +22,34 @@ rails g has_badges
 
 ## How To:
 
-### Know user's badges
+### Reward a user for achievements by giving him points
+You can reward a given resource with points :
 ``` ruby
-@user.badges #returns an array of badges
-@user.has_badge? 'Serial Killer' # true or false
+  @user.wins 70
+  @user.wins 70, 'Helping a friend'   # reason is facultative
+```
+You can also remove points :
+``` ruby
+  @user.looses 70, 'Spamming 3 users' # reason is facultative
 ```
 
-### Increase number of points of a user (to be done...)
-You can add points to given resource using :
+
+You can also reward a resource after reaching a milestone :
 ``` ruby
-  @user.earns 70
-  @user.earns 70, euros
+  @user.achieved 'Registration'     	# set user registration milestone
 ```
-by default points currency is used
+by doing this the number of points defined for this milestone are added to user's point_logs.
+
+### Know user's badges & achievements
+``` ruby
+@user.badges 							# returns an array of badges
+@user.has_badge? 'Serial Killer' 		# true or false
+@user.achievements                  	# a list of user achivements
+@user.achieved? :registration       	# true if user achieved the 'Registration' achievement 
+
+```
 
 ## TODO
- - Add points_log & earns method to has_badges extension
  - Define achievements (model, generators)
  - Trigger badge awarding when user complete achievement
  - Test: Refactor avoid duplication of model definition in fixture

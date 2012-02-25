@@ -1,7 +1,6 @@
 require "bundler/setup"
 require 'active_record'
 require 'active_support'
-require 'minitest/autorun'
 
 require File.dirname(__FILE__) + '/../lib/has_badges/has_badges_extensions'
 
@@ -35,7 +34,9 @@ class Helper
   end
 
   def self.create_user_point(options = {})
-    Point.create({:user_id  => 1, :amount => 1}.merge(options))
+    Point.create({:user_id  => 1, 
+                  :amount => 1,
+                  :date => Time.now}.merge(options))
   end
   
 end
