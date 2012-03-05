@@ -22,7 +22,7 @@ rails g has_badges
 ```
 ## How To:
 
-### Give points
+### Points
 You can reward a given resource with points:
 ``` ruby
 @user.wins 70
