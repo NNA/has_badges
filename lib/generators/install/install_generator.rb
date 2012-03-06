@@ -10,6 +10,7 @@ class HasBadgesGenerator < Rails::Generators::Base
   argument :user_name, :type => :string, :default => 'User', :banner => 'Name of model that will have badges (default: User)'
   argument :badge_name, :type => :string, :default => 'Badge', :banner => 'Name of model that will handle badges (default: Badge)'
   argument :point_name, :type => :string, :default => 'Point', :banner => 'Name of model that will handle points (default: Point)'
+  argument :achievement_name, :type => :string, :default => 'Achievement', :banner => 'Name of model that will handle possible achievements (default: Achievement)'
 
   def initialize(*args, &block)
     super
@@ -46,12 +47,14 @@ class HasBadgesGenerator < Rails::Generators::Base
     template 'model/point.rb', "app/models/#{singular_lower_case point_name}.rb"
     template 'model/badge.rb', "app/models/#{singular_lower_case badge_name}.rb"
     template 'model/user_badge.rb', "app/models/#{singular_lower_case user_name}_#{singular_lower_case badge_name}.rb"
+    template 'model/achievement.rb', "app/models/#{singular_lower_case achievement_name}.rb"
   end
 
   def create_migration
     migration_template 'migration/points.rb', "db/migrate/create_#{plural_lower_case point_name}"
     migration_template 'migration/badges.rb', "db/migrate/create_#{plural_lower_case badge_name}"
     migration_template 'migration/user_badges.rb', "db/migrate/create_#{singular_lower_case user_name}_#{plural_lower_case badge_name}"
+    migration_template 'migration/achievements.rb', "db/migrate/create_#{plural_lower_case achievement_name}"
   end
 
 end

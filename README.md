@@ -20,22 +20,26 @@ gem 'has_badges', :git=>'https://github.com/NNA/has_badges'
 ``` ruby
 rails g has_badges
 ```
+
+3 - Decorate user model:
+``` ruby
+class User < ActiveRecord::Base
+  has_badges
+end
+```
+
 ## How To:
 
 ### Points
-You can reward a given resource with points:
+You can give / remove points to a resource:
 ``` ruby
 @user.wins 70
 @user.wins 70, 'Helping a friend'   # reason is facultative
-```
-
-You can also remove points :
-``` ruby
 @user.looses 70, 'Spamming 3 users' # reason is facultative
 ```
 
-### Achieve milestones 
-You can also reward a resource after reaching a milestone :
+### Milestones 
+You can also reward a resource after reaching a certain milestone :
 ``` ruby
 @user.achieved 'Registration'     	# set user registration milestone
 ```

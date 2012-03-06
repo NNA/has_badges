@@ -27,4 +27,11 @@ ActiveRecord::Schema.define(:version => 2) do
     t.datetime "updated_at"
   end
 
+  create_table "achievements", :force => true do |t|
+    t.string   "name"
+    t.integer  "points_rewarded"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
 end
