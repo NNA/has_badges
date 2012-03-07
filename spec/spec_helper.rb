@@ -15,9 +15,21 @@ ActiveSupport::Dependencies.autoload_paths << fixture_path
 
 load(File.dirname(__FILE__) + '/schema.rb')
 
-class Helper
+class DryFactory
   
   @@data_cache = {}
+
+  def self.access_as_class_vars_from callerInstance, contexts 
+    contexts.each do |context|
+      if @@data_cache[context].nil?
+        DryFactory.class_variable_set("@@data_cache", 
+                                  @@data_cache.merge({context => callerInstance.send(context)}))
+      end
+      @@data_cache[context].each_pair do |k, v|
+        callerInstance.instance_variable_set "@#{k}", v
+      end
+    end
+  end
   
   def self.clean_data
     User.destroy_all
