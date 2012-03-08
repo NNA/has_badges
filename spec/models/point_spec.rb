@@ -3,14 +3,27 @@ require 'spec_helper'
 
 require  File.join(Dir.pwd,"lib/generators/install/templates/model/point")
 
-describe 'PointModel'  do
-	describe '#validations' do
-    it 'must persits when given an amount and date' do
-      point_attr = { amount: 1, date: 1.day.ago }
-      Point.create!(point_attr).reload.attributes.select{|k,v| k == 'amount' || k == 'date' }.symbolize_keys!.must_equal point_attr
-    end
-    it 'must raise Exception if not given an amount and date' do
-      proc {Point.create!()}.must_raise ActiveRecord::RecordInvalid
+describe 'Point'  do
+  
+  describe '#relationships' do
+    it 'must belong_to a user' do
+      Point.reflect_on_association(:user).macro.must_equal :belongs_to
     end
   end
+  
+  describe '#validations' do
+    it 'must be a valid record when given amount and date' do
+      Point.new({ amount: 1, date: 1.day.ago }).valid?.must_equal true
+    end
+    it 'wont be a valid record if missing amount and date' do
+      Point.new.valid?.wont_equal true
+    end
+  end
+  
+  describe '#mass_assignable_attr' do
+    it 'must be possible to assign amount, date, user_id and reason' do
+      Point.accessible_attributes.to_a.must_equal ['user_id', 'amount', 'date', 'reason']
+    end
+  end
+  
 end

@@ -3,8 +3,8 @@ class Point < ActiveRecord::Base
 
   attr_accessible :user_id,
   				  :amount,
-  				  :reason,
-  				  :date
+  				  :date,
+  				  :reason
 
   validates_presence_of :amount,
   						:date

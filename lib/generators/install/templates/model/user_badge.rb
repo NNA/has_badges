@@ -8,5 +8,6 @@ class UserBadge < ActiveRecord::Base
 
   validates_presence_of :user_id, 
   						:badge_id
+  
   validates_uniqueness_of :user_id, :scope => [:badge_id]
 end
