@@ -1,4 +1,5 @@
 require "bundler/setup"
+require 'minitest/spec'
 require 'active_record'
 require 'active_support'
 
@@ -54,6 +55,16 @@ class DryFactory
     Point.create({:user_id  => 1, 
                   :amount => 1,
                   :date => Time.now}.merge(options))
+  end
+
+  def self.db_isolated_from klass=:all, &block
+    action = klass.equal?(:all) ? 'clean_data' : 'klass.send(:destroy_all)'
+    begin
+      eval action
+      yield
+    ensure
+      eval action
+    end
   end
   
 end

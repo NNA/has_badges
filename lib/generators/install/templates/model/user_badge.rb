@@ -1,5 +1,4 @@
 class UserBadge < ActiveRecord::Base
-  # new columns need to be added here to be writable through mass assignment
   belongs_to :user
   belongs_to :badge
   

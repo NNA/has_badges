@@ -54,7 +54,8 @@ by doing this the number of points defined for this milestone are added to user'
 ```
 
 ## TODO
- - Define achievements (model, generators)
+ - Better testing of validate presence of
+ - Define achievements (model, generators) - WIP
  - Trigger badge awarding when user complete achievement
  - Test: Refactor before each code as SpecHelper method
  - Release v0.0.1 of gem to RubyForge

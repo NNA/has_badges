@@ -4,6 +4,5 @@ source "http://rubygems.org"
 gemspec
 
 group :development do
-  #temporary https://github.com/guard/guard-minitest/pull/25
-  gem 'guard-minitest', :git => 'git://github.com/aspiers/guard-minitest.git'
+  gem 'guard-minitest', :git => 'git://github.com/aspiers/guard-minitest.git' #temporary https://github.com/guard/guard-minitest/pull/25
 end
