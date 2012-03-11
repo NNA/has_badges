@@ -57,13 +57,13 @@ class DryFactory
                   :date => Time.now}.merge(options))
   end
 
-  def self.db_isolated_from klass=:all, &block
-    action = klass.equal?(:all) ? 'clean_data' : 'klass.send(:destroy_all)'
-    begin
-      eval action
-      yield
-    ensure
-      eval action
+  def self.only_for_this_test &block
+    ActiveRecord::Base.transaction do
+      begin
+        yield
+      ensure
+        raise ActiveRecord::Rollback
+      end
     end
   end
   

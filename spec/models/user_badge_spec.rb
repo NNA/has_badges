@@ -13,7 +13,7 @@ describe UserBadge  do
   end
 
   it 'must persist, accept r/w of required attributes and be found by id' do
-    DryFactory.db_isolated_from UserBadge do
+    DryFactory.only_for_this_test do
       (ub = UserBadge.create(valid_attributes)).reload
       UserBadge.find(ub.id).attributes.must_equal ub.attributes
       UserBadge.find(ub.id).attributes.keep_if{|k,v| valid_attributes.stringify_keys!.keys.include? k}.must_equal valid_attributes
@@ -35,7 +35,7 @@ describe UserBadge  do
       UserBadge.new.valid?.wont_equal true
     end
     it 'must validate uniqueness_of' do
-      DryFactory.db_isolated_from UserBadge do
+      DryFactory.only_for_this_test do
         ub = UserBadge.create!(valid_attributes)
         proc {UserBadge.create!(valid_attributes)}.must_raise ActiveRecord::RecordInvalid
       end

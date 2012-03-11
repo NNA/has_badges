@@ -64,12 +64,9 @@ describe 'User with badges_extensions' do
       @user.points.must_equal 0
     end
     it 'must return 15 if user has 10 + 5 points in his history' do
-      #TODO: refactor with Spec.only_for_this_test {five_extra_points = DryFactory.create ...)}
-      begin
+      DryFactory.only_for_this_test do
         five_extra_points = DryFactory.create_user_point(:user_id => @user_with_ten_points.id, :amount => 5)
         @user_with_ten_points.points.must_equal 15
-      ensure
-        five_extra_points.destroy if five_extra_points
       end
     end
   end

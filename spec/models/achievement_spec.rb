@@ -13,7 +13,7 @@ describe Achievement  do
   end
   
   it 'must persist, accept r/w of required attributes and be found by id' do
-    DryFactory.db_isolated_from Achievement do
+    DryFactory.only_for_this_test do
       (ach = Achievement.create(valid_attributes)).reload
       Achievement.find(ach.id).attributes.must_equal ach.attributes
       Achievement.find(ach.id).attributes.keep_if{|k,v| valid_attributes.stringify_keys!.keys.include? k}.must_equal valid_attributes

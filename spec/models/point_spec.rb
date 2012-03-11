@@ -13,7 +13,7 @@ describe Point  do
   end
 
   it 'must persist, accept r/w of required attributes and be found by id' do
-    DryFactory.db_isolated_from Point do
+    DryFactory.only_for_this_test do
       (point = Point.create(valid_attributes)).reload
       Point.find(point.id).attributes.must_equal point.attributes
       Point.find(point.id).attributes.keep_if{|k,v| valid_attributes.stringify_keys!.keys.include? k}.must_equal valid_attributes
