@@ -77,7 +77,7 @@ describe 'User with badges_extensions' do
       Point.expects(:create).with(:user_id  => @user.id, 
                                   :amount   => 30, 
                                   :reason   => 'Giving back to open source',
-                                  :date     => 'now').returns(plus_30_points = mock())
+                                  :date     => Time.now).returns(plus_30_points = mock())
       @user.wins(30, 'Giving back to open source').must_equal plus_30_points
     end
 

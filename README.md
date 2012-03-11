@@ -54,10 +54,11 @@ by doing this the number of points defined for this milestone are added to user'
 ```
 
 ## TODO
+ - Badge awarding with rake task
+ - Badge awarding Sync using after_save on UserPoints
+ - Badge awarding Asynchronously using resque 
  - Better testing of validate presence of
- - Define achievements (model, generators) - WIP
- - Trigger badge awarding when user complete achievement
- - Test: Refactor before each code as SpecHelper method
+ - Test: Refactor DryFactories
  - Release v0.0.1 of gem to RubyForge
  - Add a cache column to avoid querying database to know one's user badges
  - Skip model, migrations, etc... in generators
