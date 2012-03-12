@@ -1,6 +1,6 @@
 module HasBadges
-	class Distribution
-    def distribute_to receiver
+  class Distribution
+    def self.distribute_to receiver
       
     end
   end

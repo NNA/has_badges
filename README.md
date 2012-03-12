@@ -1,4 +1,7 @@
 # Has badges - Badges and Achievements for Rails
+By using your site / service, users wins or looses points. He also achieves milestones.
+You define badges that he can win at a certain level of point / milestone.
+Badges are awarded automatically to the user in exchange of his points / milestones.
 
 WARNING: This gem is still much work in progress and is not production ready.
 
@@ -53,9 +56,29 @@ by doing this the number of points defined for this milestone are added to user'
 @user.achieved? :registration       	# true if user achieved the 'Registration' achievement 
 ```
 
+### Distribute badges - WIP
+Badge distribution takes user's points / milestone in exchange of the badge. It gives the user the first badge he can have given the points / milestones he has. 
+
+You can distribute badges to users in 2 different ways:
+1- Manually
+``` ruby
+HasBadges::Distribution.distribute_badges(@user)			# 
+```
+2- By running a rake task
+``` ruby
+rake has_badges:distribute              					# 
+```
+
+If you want to give a certain badge to a user without modifying using his points / milestones use this:
+``` ruby
+@user.award 'Best buyer'     					# Give @user the best buyer badge without modyfing his point / milestone won
+@user.unaward 'Best buyer'						# Take @user 'Best buyer' badge without touching his points / milestones
+```
+
+
 ## TODO
- - Test avoid usage of schema.rb reuse migration instead
  - Badge awarding with rake task (WIP)
+ - Test avoid usage of schema.rb reuse migration instead
  - Test: refactor DryFactory.only_for_this_test to avoid returning values to clean from within the block
  - Badge awarding Sync using after_save on UserPoints
  - Badge awarding Asynchronously using resque 

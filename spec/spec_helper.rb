@@ -3,6 +3,7 @@ require 'minitest/spec'
 require 'active_record'
 require 'active_support'
 
+require File.dirname(__FILE__) + '/../lib/has_badges/distribution'
 require File.dirname(__FILE__) + '/../lib/has_badges/has_badges_extensions'
 
 ActiveRecord::Base.configurations = YAML::load(IO.read(File.dirname(__FILE__) + '/database.yml'))
