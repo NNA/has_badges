@@ -54,7 +54,9 @@ by doing this the number of points defined for this milestone are added to user'
 ```
 
 ## TODO
- - Badge awarding with rake task
+ - Test avoid usage of schema.rb reuse migration instead
+ - Badge awarding with rake task (WIP)
+ - Test: refactor DryFactory.only_for_this_test to avoid returning values to clean from within the block
  - Badge awarding Sync using after_save on UserPoints
  - Badge awarding Asynchronously using resque 
  - Better testing of validate presence of

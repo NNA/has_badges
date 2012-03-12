@@ -58,13 +58,13 @@ class DryFactory
   end
 
   def self.only_for_this_test &block
-    ActiveRecord::Base.transaction do
+    # ActiveRecord::Base.transaction do
       begin
-        yield
+        result = block.call
       ensure
-        raise ActiveRecord::Rollback
+        result.destroy if result
       end
-    end
+    # end
   end
   
 end

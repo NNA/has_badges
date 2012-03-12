@@ -17,6 +17,7 @@ describe UserBadge  do
       (ub = UserBadge.create(valid_attributes)).reload
       UserBadge.find(ub.id).attributes.must_equal ub.attributes
       UserBadge.find(ub.id).attributes.keep_if{|k,v| valid_attributes.stringify_keys!.keys.include? k}.must_equal valid_attributes
+      ub
     end
   end
   
@@ -36,8 +37,9 @@ describe UserBadge  do
     end
     it 'must validate uniqueness_of' do
       DryFactory.only_for_this_test do
-        ub = UserBadge.create!(valid_attributes)
+        ub = UserBadge.create(valid_attributes)
         proc {UserBadge.create!(valid_attributes)}.must_raise ActiveRecord::RecordInvalid
+        ub
       end
     end
   end

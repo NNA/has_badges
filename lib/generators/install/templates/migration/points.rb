@@ -5,6 +5,7 @@ class Create<%= plural_camel_case point_name %> < ActiveRecord::Migration
       t.integer :amount
       t.string :reason
       t.datetime :date
+      t.boolean :used
 
       t.timestamps
     end

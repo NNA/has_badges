@@ -8,15 +8,20 @@ describe Point  do
     {user_id: 1, amount: 10, date: 1.day.ago}
   end
 
+  let :assignable_attributes do
+    {user_id: 1, amount: 10, date: 1.day.ago, reason:'some_resaon', used: false}
+  end
+
   let :valid_point do
     Point.new(valid_attributes)
   end
 
-  it 'must persist, accept r/w of required attributes and be found by id' do
+  it 'must persist, accept r/w of assignable attributes and be found by id' do
     DryFactory.only_for_this_test do
-      (point = Point.create(valid_attributes)).reload
+      (point = Point.create(assignable_attributes)).reload
       Point.find(point.id).attributes.must_equal point.attributes
-      Point.find(point.id).attributes.keep_if{|k,v| valid_attributes.stringify_keys!.keys.include? k}.must_equal valid_attributes
+      Point.find(point.id).attributes.keep_if{|k,v| assignable_attributes.stringify_keys!.keys.include? k}.must_equal assignable_attributes
+      point
     end
   end
 
@@ -36,8 +41,8 @@ describe Point  do
   end
   
   describe 'assignable_attributes' do
-    it 'must be possible to assign amount, date, user_id and reason' do
-      Point.accessible_attributes.to_a.must_equal ['user_id', 'amount', 'date', 'reason']
+    it 'must be possible to assign assignable attributes' do
+      Point.accessible_attributes.to_a.must_equal assignable_attributes.stringify_keys!.keys
     end
   end
   

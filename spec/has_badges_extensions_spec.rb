@@ -67,6 +67,7 @@ describe 'User with badges_extensions' do
       DryFactory.only_for_this_test do
         five_extra_points = DryFactory.create_user_point(:user_id => @user_with_ten_points.id, :amount => 5)
         @user_with_ten_points.points.must_equal 15
+        five_extra_points
       end
     end
   end

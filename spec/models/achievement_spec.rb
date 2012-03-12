@@ -17,6 +17,7 @@ describe Achievement  do
       (ach = Achievement.create(valid_attributes)).reload
       Achievement.find(ach.id).attributes.must_equal ach.attributes
       Achievement.find(ach.id).attributes.keep_if{|k,v| valid_attributes.stringify_keys!.keys.include? k}.must_equal valid_attributes
+      ach
     end
   end
   

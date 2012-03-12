@@ -23,6 +23,7 @@ ActiveRecord::Schema.define(:version => 2) do
     t.integer  "amount"
     t.string   "reason"
     t.datetime "date"
+    t.boolean "used"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

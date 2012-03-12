@@ -13,4 +13,6 @@ if defined?(Rails) && Rails::VERSION::MAJOR == 3
     
     end
   end
+else
+  puts 'ERROR: has_badges needs Rails > 3, please execute \'gem install rails\' if you want to use has_badges'
 end
