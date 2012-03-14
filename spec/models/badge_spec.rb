@@ -5,7 +5,7 @@ describe Badge  do
   subject { Badge.new }
   
   let :valid_attributes do
-    {name: 'my_name'}
+    {name: 'my_name', required_points: 10}
   end
 
   let :valid_badge do
@@ -35,7 +35,7 @@ describe Badge  do
 
   describe 'assignable_attributes' do
     it 'must be possible to assign name' do
-      Badge.accessible_attributes.to_a.must_equal ['name']
+      Badge.accessible_attributes.to_a.must_equal ['name', 'required_points']
     end
   end
 end

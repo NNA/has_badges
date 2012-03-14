@@ -6,7 +6,8 @@ ActiveRecord::Schema.define(:version => 2) do
   end
 
   create_table "badges", :force => true do |t|
-    t.string  "name"
+    t.string   "name"
+    t.integer  "required_points"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -23,7 +24,7 @@ ActiveRecord::Schema.define(:version => 2) do
     t.integer  "amount"
     t.string   "reason"
     t.datetime "date"
-    t.boolean "used"
+    t.boolean  "used"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

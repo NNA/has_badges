@@ -2,6 +2,7 @@ require "bundler/setup"
 require 'minitest/spec'
 require 'active_record'
 require 'active_support'
+require 'mocha'
 
 require File.dirname(__FILE__) + '/../lib/has_badges/distribution'
 require File.dirname(__FILE__) + '/../lib/has_badges/has_badges_extensions'
@@ -18,8 +19,15 @@ ActiveSupport::Dependencies.autoload_paths << fixture_path
 load(File.dirname(__FILE__) + '/schema.rb')
 
 class DryFactory
-  
   @@data_cache = {}
+  @@required_fields_hash = {
+    user:       { login: "user_name1" },
+    badge:      { name:  "badge_name1", points_required: 0 },
+    user_badge: { user_id: 1, badge_id: 1 },
+    point:      { user_id: 1, 
+                  amount: 1,
+                  date: Time.now }
+  }
 
   def self.access_as_class_vars_from callerInstance, contexts 
     contexts.each do |context|
@@ -37,6 +45,21 @@ class DryFactory
     User.destroy_all
     Badge.destroy_all
     UserBadge.destroy_all
+  end
+
+
+  def self.build klass, options = {}
+    @time = Benchmark.measure do
+      puts "klass #{klass}"
+      eval(klass.to_s.classify).new(@@required_fields_hash[klass].merge(options))
+    end
+    puts "-------------------------------------------------------#{@time}"
+  end
+
+  def self.create klass, options = {}
+    # puts "klass#{klass}"
+    # puts "options#{options}"
+    self.build(klass, options).tap(&:save)
   end
 
   def self.create_user(options = {})

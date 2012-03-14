@@ -77,6 +77,7 @@ If you want to give a certain badge to a user without modifying using his points
 
 
 ## TODO
+ - Improve perf of User DryFactories (lightweight model ?)
  - Badge awarding with rake task (WIP)
  - Test avoid usage of schema.rb reuse migration instead
  - Test: refactor DryFactory.only_for_this_test to avoid returning values to clean from within the block
@@ -84,7 +85,7 @@ If you want to give a certain badge to a user without modifying using his points
  - Badge awarding Asynchronously using resque 
  - Better testing of validate presence of
  - Test: Refactor DryFactories
- - Release v0.0.1 of gem to RubyForge
+ - Release v0.1 of gem to RubyForge
  - Add a cache column to avoid querying database to know one's user badges
  - Skip model, migrations, etc... in generators
  - Make an engine

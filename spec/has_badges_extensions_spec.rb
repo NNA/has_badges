@@ -1,7 +1,5 @@
 require 'minitest/spec'
 require 'minitest/autorun'
-require 'mocha'
-require  File.join(Dir.pwd,"lib/has_badges")
 require 'spec_helper'
 
 describe 'User with badges_extensions' do
@@ -13,7 +11,7 @@ describe 'User with badges_extensions' do
 
 	let :user_with_newbie_badge do
 	  user_with_newbie_badge = DryFactory.create_user(:login => 'user_with_newbie_badge')
-	  newbie_badge = DryFactory.create_badge(:name => 'Newbie')
+	  newbie_badge = DryFactory.create_badge(:name => 'Newbie', :required_points => 0)
 	  DryFactory.create_user_badge(:user_id => user_with_newbie_badge.id, :badge_id => newbie_badge.id)
 	  { :user_with_newbie_badge => user_with_newbie_badge, :newbie_badge => newbie_badge }
 	end
@@ -97,5 +95,4 @@ describe 'User with badges_extensions' do
       @user.looses(10, 'Spamming users').must_equal minus_10_points
     end
   end
-
 end
