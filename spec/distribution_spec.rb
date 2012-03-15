@@ -3,8 +3,8 @@ require 'spec_helper'
 
 describe HasBadges::Distribution do
   let :user_stubbed_ten_points do
-    user = DryFactory.build :user
-    # ten_points = DryFactory.create :point, :user_id => user_with_ten_points.id, :amount => 10
+    user = DryFactory.create :user
+    user.stubs(:nil?).returns(false)
     user.stubs(:points).returns(10)
     user
   end
@@ -44,7 +44,7 @@ describe HasBadges::Distribution do
 
   describe :user_awardable_with_badge? do
     it 'must return false if a parameter is nil' do
-      # improvement: raise exception instead
+      # TODO: Improvement: raise exception instead
       HasBadges::Distribution.user_awardable_with_badge?(nil, nil).must_equal false
     end
 

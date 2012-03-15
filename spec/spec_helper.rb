@@ -3,20 +3,36 @@ require 'minitest/spec'
 require 'active_record'
 require 'active_support'
 require 'mocha'
+require 'fileutils'
 
 require File.dirname(__FILE__) + '/../lib/has_badges/distribution'
 require File.dirname(__FILE__) + '/../lib/has_badges/has_badges_extensions'
 
-ActiveRecord::Base.configurations = YAML::load(IO.read(File.dirname(__FILE__) + '/database.yml'))
-ActiveRecord::Base.establish_connection(ENV['DB'] || 'sqlite3')
-
+#Load AR Models
 model_path = File.dirname(__FILE__) + '/../lib/generators/install/templates/model/'
 ActiveSupport::Dependencies.autoload_paths << model_path
-
 fixture_path = File.dirname(__FILE__) + '/fixtures/'
 ActiveSupport::Dependencies.autoload_paths << fixture_path
 
-load(File.dirname(__FILE__) + '/schema.rb')
+#Load migrations using has_badge_generator
+require 'has_badges' # require only generator if possible
+FileUtils.rm_rf './tmp/db'
+Rails::Generators.invoke("has_badges", ['', "--no_model=true --migration_dir='./tmp/db'"])
+Dir['**/*.rb'].keep_if{|a|a[0..5]=='tmp/db'}.each do |file|
+  require_relative "../#{file}"
+end
+require_relative "fixtures/users_migration.rb"
+
+# Loading database by running migrations and fixtures
+ActiveRecord::Base.configurations = YAML::load(IO.read(File.dirname(__FILE__) + '/database.yml'))
+ActiveRecord::Base.establish_connection(ENV['DB'] || 'sqlite3')
+
+CreateUsers.new.change
+
+CreatePoints.new.change
+CreateBadges.new.change
+CreateUserBadges.new.change
+CreateAchievements.new.change
 
 class DryFactory
   @@data_cache = {}
@@ -40,25 +56,12 @@ class DryFactory
       end
     end
   end
-  
-  def self.clean_data
-    User.destroy_all
-    Badge.destroy_all
-    UserBadge.destroy_all
-  end
-
 
   def self.build klass, options = {}
-    @time = Benchmark.measure do
-      puts "klass #{klass}"
-      eval(klass.to_s.classify).new(@@required_fields_hash[klass].merge(options))
-    end
-    puts "-------------------------------------------------------#{@time}"
+    eval(klass.to_s.classify).new(@@required_fields_hash[klass].merge(options))
   end
 
   def self.create klass, options = {}
-    # puts "klass#{klass}"
-    # puts "options#{options}"
     self.build(klass, options).tap(&:save)
   end
 
