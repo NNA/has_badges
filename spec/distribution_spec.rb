@@ -2,15 +2,17 @@ require 'minitest/spec'
 require 'spec_helper'
 
 describe HasBadges::Distribution do
-  let :user_stubbed_ten_points do
-    user = DryFactory.create :user
-    user.stubs(:nil?).returns(false)
-    user.stubs(:points).returns(10)
-    user
-  end
+  let (:user_stubbed_0_points)    { user_stubbed_points 0}
+  let (:user_stubbed_10_points)   { user_stubbed_points 10}
 
-  let :badge_requiring_ten_points do
-    DryFactory.build :badge, :required_points => 10
+  let(:badge_requiring_60_points) { DryFactory.build :badge, :required_points => 60 }
+  let(:badge_requiring_10_points) { DryFactory.build :badge, :required_points => 10 }
+
+  def user_stubbed_points nb_of_points
+    user = DryFactory.build :user
+    user.stubs(:nil?).returns(false)
+    user.stubs(:points).returns(nb_of_points)
+    user
   end
 
   # describe :distribute_badges do
@@ -49,13 +51,13 @@ describe HasBadges::Distribution do
     end
 
     it 'must return true if user has more or equal than the number of points required by the badge and han\'t already this badge' do
-      HasBadges::Distribution.user_awardable_with_badge?(user_stubbed_ten_points, badge_requiring_ten_points).must_equal true
+      HasBadges::Distribution.user_awardable_with_badge?(user_stubbed_10_points, badge_requiring_10_points).must_equal true
     end
 
-    # it 'must return false if user has fewer points than required by the badge' do
-    #   HasBadges::Distribution.user_awardable_with_badge?(user_with_ten_points, badge_requiring_sixty_points).must_equal false
-    #   HasBadges::Distribution.user_awardable_with_badge?(user_without_points, badge_requiring_sixty_points).must_equal false
-    # end
+    it 'must return false if user has fewer points than required by the badge' do
+      HasBadges::Distribution.user_awardable_with_badge?(user_stubbed_10_points, badge_requiring_60_points).must_equal false
+      HasBadges::Distribution.user_awardable_with_badge?(user_stubbed_0_points, badge_requiring_10_points).must_equal false
+    end
 
     # it 'should return false if user already have the given badge' do
     #   HasBadges::Distribution.user_awardable_with_badge?(user_with_newbie_badge, newbie_badge).must_equal false
