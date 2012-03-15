@@ -17,7 +17,9 @@ ActiveSupport::Dependencies.autoload_paths << fixture_path
 #Load migrations using has_badge_generator
 require 'has_badges' # require only generator if possible
 FileUtils.rm_rf './tmp/db'
-Rails::Generators.invoke("has_badges", ['', "--no_model=true --migration_dir='./tmp/db'"])
+silence :stdout do
+  Rails::Generators.invoke("has_badges", ['', "--no_model=true --migration_dir='./tmp/db'"])
+end
 Dir['**/*.rb'].keep_if{|a|a[0..5]=='tmp/db'}.each do |file|
   require_relative "../#{file}"
 end
@@ -26,13 +28,13 @@ require_relative "fixtures/users_migration.rb"
 # Loading database by running migrations and fixtures
 ActiveRecord::Base.configurations = YAML::load(IO.read(File.dirname(__FILE__) + '/database.yml'))
 ActiveRecord::Base.establish_connection(ENV['DB'] || 'sqlite3')
-
-CreateUsers.new.change
-
-CreatePoints.new.change
-CreateBadges.new.change
-CreateUserBadges.new.change
-CreateAchievements.new.change
+silence :stdout do
+  CreateUsers.new.change
+  CreatePoints.new.change
+  CreateBadges.new.change
+  CreateUserBadges.new.change
+  CreateAchievements.new.change
+end
 
 class DryFactory
   @@data_cache = {}

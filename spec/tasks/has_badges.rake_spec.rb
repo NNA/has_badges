@@ -13,6 +13,8 @@ describe "has_badge rake tasks" do
 
     @rake[@task_name].wont_equal nil
     HasBadges::Distribution.expects(:distribute_to).with(:all).returns(true)
-    @rake[@task_name].invoke
+    silence(:stdout) do
+      @rake[@task_name].invoke
+    end
   end
 end
