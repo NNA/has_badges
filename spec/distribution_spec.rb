@@ -2,6 +2,7 @@ require 'minitest/spec'
 require 'spec_helper'
 
 describe HasBadges::Distribution do
+  let (:user_created_10_points)   { user_builded_10_points.save ; user_builded_10_points}
   let (:user_builded_10_points)   { user = DryFactory.build(:user) ; user.point_logs.build(:amount => 10, :date => 1.minute.ago) ; user}
 
   let (:user_stubbed_0_points)    { DryFactory.build_stubbed(:user, :points => 0) }
@@ -32,24 +33,40 @@ describe HasBadges::Distribution do
 
   describe :award_badge do
     it 'awardable?: return true, award badge and reduce points with amount of points required by badge' do
-      DryFactory.only_for_this_test do
-        user_builded_10_points.save
-        HasBadges::Distribution.stubs(:user_awardable_with_badge?).with(user_builded_10_points, badge_requiring_10_points).returns true  
+      user_created_10_points
+      DryFactory.rollback_after_block do
+        HasBadges::Distribution.stubs(:user_awardable_with_badge?).with(user_created_10_points, badge_requiring_10_points).returns true  
         
-        HasBadges::Distribution.award_badge(user_builded_10_points, badge_requiring_10_points).must_equal true
+        HasBadges::Distribution.award_badge(user_created_10_points, badge_requiring_10_points).must_equal true
         
-        user_builded_10_points.badges.must_equal [badge_requiring_10_points]
-        user_builded_10_points.points.must_equal 0
-        user_builded_10_points
+        user_created_10_points.badges.must_equal [badge_requiring_10_points]
+        user_created_10_points.points.must_equal 0
       end
     end
 
     it 'not awardable?: return false not award badge and not withdraw points' do
-      
+      user_created_10_points
+      DryFactory.rollback_after_block do
+        HasBadges::Distribution.stubs(:user_awardable_with_badge?).with(user_created_10_points, badge_requiring_10_points).returns false
+        
+        HasBadges::Distribution.award_badge(user_created_10_points, badge_requiring_10_points).must_equal false
+        
+        user_created_10_points.badges.must_equal []
+        user_created_10_points.points.must_equal 10
+      end
     end
 
     it 'awardable? but Exception raised: return false not award badge and not reduce points' do
+      user_created_10_points
+      DryFactory.rollback_after_block do
+        HasBadges::Distribution.stubs(:user_awardable_with_badge?).with(user_created_10_points, badge_requiring_10_points).returns true
+        Point.stubs(:create).raises 'someException'
 
+        HasBadges::Distribution.award_badge(user_created_10_points, badge_requiring_10_points).must_equal false
+
+        user_created_10_points.badges.must_equal []
+        user_created_10_points.points.must_equal 10
+      end
     end
   end
 
