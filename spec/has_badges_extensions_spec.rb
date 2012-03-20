@@ -69,12 +69,7 @@ describe 'User with badges_extensions' do
     it 'must return 0 if user has no points' do
       @user.points.must_equal 0
     end
-    it 'without asking database, must return 15 if user has 10 + 5 points in his history' do
-      user_builded.point_logs.build :amount => 10
-      user_builded.point_logs.build :amount => 5
-      user_builded.points.must_equal 15
-    end
-    it 'asking datatbase, must return 15 if user has 10 + 5 points in his history' do
+    it 'must return 15 if user has 10 + 5 points in his history' do
       DryFactory.only_for_this_test do
         five_extra_points = DryFactory.create_user_point(:user_id => @user_with_ten_points.id, :amount => 5)
         @user_with_ten_points.points.must_equal 15

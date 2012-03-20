@@ -37,6 +37,7 @@ describe HasBadges::Distribution do
         HasBadges::Distribution.stubs(:user_awardable_with_badge?).with(user_builded_10_points, badge_requiring_10_points).returns true  
         
         HasBadges::Distribution.award_badge(user_builded_10_points, badge_requiring_10_points).must_equal true
+        
         user_builded_10_points.badges.must_equal [badge_requiring_10_points]
         user_builded_10_points.points.must_equal 0
         user_builded_10_points
@@ -44,7 +45,7 @@ describe HasBadges::Distribution do
     end
 
     it 'not awardable?: return false not award badge and not withdraw points' do
-
+      
     end
 
     it 'awardable? but Exception raised: return false not award badge and not reduce points' do
