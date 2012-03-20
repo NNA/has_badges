@@ -63,6 +63,12 @@ class DryFactory
     eval(klass.to_s.classify).new(@@required_fields_hash[klass].merge(options))
   end
 
+  def self.build_stubbed klass, options = {}
+    builded = eval(klass.to_s.classify).new(@@required_fields_hash[klass])
+    options.each {|k,v| builded.stubs(k).returns(v) }
+    builded
+  end
+
   def self.create klass, options = {}
     self.build(klass, options).tap(&:save)
   end

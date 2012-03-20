@@ -2,17 +2,20 @@ require 'minitest/spec'
 require 'spec_helper'
 
 describe HasBadges::Distribution do
-  let (:user_stubbed_0_points)    { user_stubbed_points 0}
-  let (:user_stubbed_10_points)   { user_stubbed_points 10}
+  let (:user_builded_10_points)   { user = DryFactory.build(:user) ; user.point_logs.build(:amount => 10, :date => 1.minute.ago) ; user}
+
+  let (:user_stubbed_0_points)    { DryFactory.build_stubbed(:user, :points => 0) }
+  let (:user_stubbed_10_points)   { DryFactory.build_stubbed(:user, :points => 10)}
 
   let(:badge_requiring_60_points) { DryFactory.build :badge, :required_points => 60 }
   let(:badge_requiring_10_points) { DryFactory.build :badge, :required_points => 10 }
 
-  def user_stubbed_points nb_of_points
-    user = DryFactory.build :user
-    user.stubs(:nil?).returns(false)
-    user.stubs(:points).returns(nb_of_points)
-    user
+  let :newbie_badge do
+    DryFactory.build(:badge)
+  end
+
+  let :user_with_newbie_badge do
+    DryFactory.build_stubbed :user, :badges => [newbie_badge]
   end
 
   # describe :distribute_badges do
@@ -27,22 +30,27 @@ describe HasBadges::Distribution do
   # 	end
   # end
 
-  # describe :award_badge do
-  #   it 'Enough points: return true, award badge and withdraw points' do
-  #     Distribution.stubs(:user_awardable_with_badge?).with(user, badge).returns true  
-  #     Distribution.award_badge(badge_requiring_10_points, user).must_equal true
-  #     user.badges.must_equal badge_requiring_10_points
-  #     user.points.must_equal 0
-  #   end
+  describe :award_badge do
+    it 'awardable?: return true, award badge and reduce points with amount of points required by badge' do
+      DryFactory.only_for_this_test do
+        user_builded_10_points.save
+        HasBadges::Distribution.stubs(:user_awardable_with_badge?).with(user_builded_10_points, badge_requiring_10_points).returns true  
+        
+        HasBadges::Distribution.award_badge(user_builded_10_points, badge_requiring_10_points).must_equal true
+        user_builded_10_points.badges.must_equal [badge_requiring_10_points]
+        user_builded_10_points.points.must_equal 0
+        user_builded_10_points
+      end
+    end
 
-  #   it 'Not enough points: return false not award badge and not withdraw points' do
+    it 'not awardable?: return false not award badge and not withdraw points' do
 
-  #   end
+    end
 
-  #   it 'Enough points but something happens: return false not award badge and not withdraw points' do
+    it 'awardable? but Exception raised: return false not award badge and not reduce points' do
 
-  #   end
-  # end
+    end
+  end
 
   describe :user_awardable_with_badge? do
     it 'must return false if a parameter is nil' do
@@ -59,8 +67,8 @@ describe HasBadges::Distribution do
       HasBadges::Distribution.user_awardable_with_badge?(user_stubbed_0_points, badge_requiring_10_points).must_equal false
     end
 
-    # it 'should return false if user already have the given badge' do
-    #   HasBadges::Distribution.user_awardable_with_badge?(user_with_newbie_badge, newbie_badge).must_equal false
-    # end
+    it 'should return false if user already has the given badge' do
+      HasBadges::Distribution.user_awardable_with_badge?(user_with_newbie_badge, newbie_badge).must_equal false
+    end
   end
 end

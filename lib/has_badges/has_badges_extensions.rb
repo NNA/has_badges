@@ -40,7 +40,7 @@ module HasBadges
       end
 
       def points
-        self.point_logs.sum(:amount)
+        self.persisted? ? self.point_logs.sum(:amount) : self.point_logs.to_a.sum(&:amount) 
       end
 
       def wins amount, reason=nil

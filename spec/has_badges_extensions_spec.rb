@@ -9,6 +9,10 @@ describe 'User with badges_extensions' do
 	  { :user => user }
 	end
 
+  let :user_builded do
+    DryFactory.build :user
+  end
+
 	let :user_with_newbie_badge do
 	  user_with_newbie_badge = DryFactory.create_user(:login => 'user_with_newbie_badge')
 	  newbie_badge = DryFactory.create_badge(:name => 'Newbie', :required_points => 0)
@@ -20,6 +24,10 @@ describe 'User with badges_extensions' do
     user_with_ten_points = DryFactory.create_user(:login => 'user_with_points')
     ten_points = DryFactory.create_user_point(:user_id => user_with_ten_points.id, :amount => 10)
     { :user_with_ten_points => user_with_ten_points, :ten_points => ten_points }
+  end
+
+  let :now do
+    Time.parse("2011-01-03")
   end
 
   before do
@@ -61,7 +69,12 @@ describe 'User with badges_extensions' do
     it 'must return 0 if user has no points' do
       @user.points.must_equal 0
     end
-    it 'must return 15 if user has 10 + 5 points in his history' do
+    it 'without asking database, must return 15 if user has 10 + 5 points in his history' do
+      user_builded.point_logs.build :amount => 10
+      user_builded.point_logs.build :amount => 5
+      user_builded.points.must_equal 15
+    end
+    it 'asking datatbase, must return 15 if user has 10 + 5 points in his history' do
       DryFactory.only_for_this_test do
         five_extra_points = DryFactory.create_user_point(:user_id => @user_with_ten_points.id, :amount => 5)
         @user_with_ten_points.points.must_equal 15
@@ -72,11 +85,11 @@ describe 'User with badges_extensions' do
 
   describe :wins do
     it 'must add given number of points to the user and save reason why' do
-      Time.stubs(:now).returns('now')
+      Time.stubs(:now).returns(now)
       Point.expects(:create).with(:user_id  => @user.id, 
                                   :amount   => 30, 
                                   :reason   => 'Giving back to open source',
-                                  :date     => Time.now).returns(plus_30_points = mock())
+                                  :date     => now).returns(plus_30_points = mock())
       @user.wins(30, 'Giving back to open source').must_equal plus_30_points
     end
 
@@ -87,11 +100,11 @@ describe 'User with badges_extensions' do
 
   describe :looses do
     it 'should bahave like win except that points are negatively saved' do
-      Time.stubs(:now).returns('now')
+      Time.stubs(:now).returns(now)
       Point.expects(:create).with(:user_id  => @user.id, 
                                   :amount   => -10, 
                                   :reason   => 'Spamming users',
-                                  :date     => 'now').returns(minus_10_points = mock())
+                                  :date     => now).returns(minus_10_points = mock())
       @user.looses(10, 'Spamming users').must_equal minus_10_points
     end
   end
