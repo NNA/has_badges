@@ -2,7 +2,8 @@ require 'minitest/spec'
 require 'spec_helper'
 
 describe HasBadges::Distribution do
-  let (:user_created_10_points)   { user_builded_10_points.save ; user_builded_10_points}
+  let (:user_created_10_points)   { user_builded_10_points.tap(&:save) ; {:user_created_10_points => user_builded_10_points} }
+
   let (:user_builded_10_points)   { user = DryFactory.build(:user) ; user.point_logs.build(:amount => 10, :date => 1.minute.ago) ; user}
 
   let (:user_stubbed_0_points)    { DryFactory.build_stubbed(:user, :points => 0) }
@@ -30,10 +31,13 @@ describe HasBadges::Distribution do
 
   # 	end
   # end
+  before do
+    DryFactory.access_as_class_vars_from self, [:user_created_10_points]
+  end
 
   describe :award_badge do
     it 'awardable?: return true, award badge and reduce points with amount of points required by badge' do
-      user_created_10_points
+      @user_created_10_points
       DryFactory.rollback_after_block do
         HasBadges::Distribution.stubs(:user_awardable_with_badge?).with(user_created_10_points, badge_requiring_10_points).returns true  
         
@@ -45,7 +49,7 @@ describe HasBadges::Distribution do
     end
 
     it 'not awardable?: return false not award badge and not withdraw points' do
-      user_created_10_points
+      @user_created_10_points
       DryFactory.rollback_after_block do
         HasBadges::Distribution.stubs(:user_awardable_with_badge?).with(user_created_10_points, badge_requiring_10_points).returns false
         
@@ -57,7 +61,7 @@ describe HasBadges::Distribution do
     end
 
     it 'awardable? but Exception raised: return false not award badge and not reduce points' do
-      user_created_10_points
+      @user_created_10_points
       DryFactory.rollback_after_block do
         HasBadges::Distribution.stubs(:user_awardable_with_badge?).with(user_created_10_points, badge_requiring_10_points).returns true
         Point.stubs(:create).raises 'someException'
