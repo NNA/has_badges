@@ -18,11 +18,17 @@ describe HasBadges::Distribution do
     DryFactory.access_as_class_vars_from self, [:user_created_10_points]
   end
 
-  # describe :distribute_badges do
-  #   it 'award badges to given users' do
-  #     HasBadges::Distribution.distribute_badges(User.all)
-  #   end
-  # end
+  describe :distribute_badges do
+    it 'award the first_possible_badge in the given list of badges to all given users' do
+      HasBadges::Distribution.expects(:first_awardable_badge).with(user_mock_1= mock('user'), anything).once.returns(badge_mock_1 = mock('badge'))
+      HasBadges::Distribution.expects(:first_awardable_badge).with(user_mock_2= mock('user'), anything).once.returns(badge_mock_2 = mock('badge'))
+
+      HasBadges::Distribution.expects(:award_badge).with(user_mock_1, badge_mock_1).once.returns true
+      HasBadges::Distribution.expects(:award_badge).with(user_mock_2, badge_mock_2).once.returns true 
+      
+      HasBadges::Distribution.distribute_badges([user_mock_1, user_mock_2], [badge_mock_1, badge_mock_2])
+    end
+  end
 
   describe :first_awardable_badge do
     before do

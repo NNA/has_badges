@@ -1,6 +1,12 @@
 module HasBadges
   class Distribution
 
+    def self.distribute_badges users, badges
+      users.each do |user|
+        award_badge user, first_awardable_badge(user, badges) 
+      end
+    end
+
     def self.user_awardable_with_badge? user, badge
       return false if (user.nil? || badge.nil?)
       return false if !user.badges.empty? && user.badges.include?(badge)
