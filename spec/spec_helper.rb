@@ -6,6 +6,7 @@ require 'mocha'
 require 'fileutils'
 
 require File.dirname(__FILE__) + '/../lib/has_badges/distribution'
+require File.dirname(__FILE__) + '/../lib/has_badges/helper'
 require File.dirname(__FILE__) + '/../lib/has_badges/has_badges_extensions'
 
 #Load AR Models

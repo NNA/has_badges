@@ -2,6 +2,8 @@ require 'minitest/spec'
 require 'spec_helper'
 
 describe HasBadges::Distribution do
+  let (:user)                     {DryFactory.build :user}
+  let (:badge)                    {DryFactory.build :badge}
   let (:user_created_10_points)   { user_builded_10_points.tap(&:save) ; {:user_created_10_points => user_builded_10_points} }
 
   let (:user_builded_10_points)   { user = DryFactory.build(:user) ; user.point_logs.build(:amount => 10, :date => 1.minute.ago) ; user}
@@ -12,12 +14,8 @@ describe HasBadges::Distribution do
   let(:badge_requiring_60_points) { DryFactory.build :badge, :required_points => 60 }
   let(:badge_requiring_10_points) { DryFactory.build :badge, :required_points => 10 }
 
-  let :newbie_badge do
-    DryFactory.build(:badge)
-  end
-
-  let :user_with_newbie_badge do
-    DryFactory.build_stubbed :user, :badges => [newbie_badge]
+  before do
+    DryFactory.access_as_class_vars_from self, [:user_created_10_points]
   end
 
   # describe :distribute_badges do
@@ -26,13 +24,20 @@ describe HasBadges::Distribution do
   #   end
   # end
 
-  # describe :award_first_possible_badge do
-  # 	it 'give user the first badges in can have within the given badges' do
+  describe :first_awardable_badge do
+    it 'returns the first badges the given user can be awarded within the given badges' do
+      HasBadges::Distribution.stubs(:user_awardable_with_badge?).with(user, first_awardable_badge  = DryFactory.build(:badge)).returns true
+      HasBadges::Distribution.stubs(:user_awardable_with_badge?).with(user, second_awardable_badge = DryFactory.build(:badge)).returns true
+      HasBadges::Distribution.stubs(:user_awardable_with_badge?).with(user, not_awardable_badge    = DryFactory.build(:badge)).returns false
+      badges = [first_awardable_badge, second_awardable_badge, not_awardable_badge]
+      puts "before out #{user.points}"
+      HasBadges::Distribution.first_awardable_badge(user, badges).must_equal first_awardable_badge
+      puts "after out #{user.points}"
+    end
 
-  # 	end
-  # end
-  before do
-    DryFactory.access_as_class_vars_from self, [:user_created_10_points]
+    it 'returns nil if the user cannot be awarded with any of the given badges' do
+
+    end
   end
 
   describe :award_badge do
@@ -90,7 +95,8 @@ describe HasBadges::Distribution do
     end
 
     it 'should return false if user already has the given badge' do
-      HasBadges::Distribution.user_awardable_with_badge?(user_with_newbie_badge, newbie_badge).must_equal false
+      user.stubs(:badges).returns([badge])
+      HasBadges::Distribution.user_awardable_with_badge?(user, badge).must_equal false
     end
   end
 end
