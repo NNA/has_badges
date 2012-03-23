@@ -25,16 +25,22 @@ describe HasBadges::Distribution do
   # end
 
   describe :first_awardable_badge do
+    before do
+      HasBadges::Distribution.stubs(:user_awardable_with_badge?).with(user, @not_awardable_badge    = DryFactory.build(:badge)).returns false
+    end
+
     it 'returns the first badges the given user can be awarded within the given badges' do
       HasBadges::Distribution.stubs(:user_awardable_with_badge?).with(user, first_awardable_badge  = DryFactory.build(:badge)).returns true
       HasBadges::Distribution.stubs(:user_awardable_with_badge?).with(user, second_awardable_badge = DryFactory.build(:badge)).returns true
-      HasBadges::Distribution.stubs(:user_awardable_with_badge?).with(user, not_awardable_badge    = DryFactory.build(:badge)).returns false
-      badges = [first_awardable_badge, second_awardable_badge, not_awardable_badge]
+      badges = [first_awardable_badge, second_awardable_badge, @not_awardable_badge]
+
       HasBadges::Distribution.first_awardable_badge(user, badges).must_equal first_awardable_badge
     end
 
     it 'returns nil if the user cannot be awarded with any of the given badges' do
-
+      badges = [@not_awardable_badge]
+      
+      HasBadges::Distribution.first_awardable_badge(user, badges).must_equal nil
     end
   end
 
