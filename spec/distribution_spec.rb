@@ -1,7 +1,9 @@
 require 'minitest/spec'
 require 'spec_helper'
 
-describe HasBadges::Distribution do
+include HasBadges
+
+describe Distribution do
   let (:user)                     {DryFactory.build :user}
   let (:badge)                    {DryFactory.build :badge}
   let (:user_created_10_points)   { user_builded_10_points.tap(&:save) ; {:user_created_10_points => user_builded_10_points} }
@@ -20,33 +22,33 @@ describe HasBadges::Distribution do
 
   describe :distribute_badges do
     it 'award the first_possible_badge in the given list of badges to all given users' do
-      HasBadges::Distribution.expects(:first_awardable_badge).with(user_mock_1= mock('user'), anything).once.returns(badge_mock_1 = mock('badge'))
-      HasBadges::Distribution.expects(:first_awardable_badge).with(user_mock_2= mock('user'), anything).once.returns(badge_mock_2 = mock('badge'))
+      Distribution.expects(:first_awardable_badge).with(user_mock_1= mock('user'), anything).once.returns(badge_mock_1 = mock('badge'))
+      Distribution.expects(:first_awardable_badge).with(user_mock_2= mock('user'), anything).once.returns(badge_mock_2 = mock('badge'))
 
-      HasBadges::Distribution.expects(:award_badge).with(user_mock_1, badge_mock_1).once.returns true
-      HasBadges::Distribution.expects(:award_badge).with(user_mock_2, badge_mock_2).once.returns true 
+      Distribution.expects(:award_badge).with(user_mock_1, badge_mock_1).once.returns true
+      Distribution.expects(:award_badge).with(user_mock_2, badge_mock_2).once.returns true 
       
-      HasBadges::Distribution.distribute_badges([user_mock_1, user_mock_2], [badge_mock_1, badge_mock_2])
+      Distribution.distribute_badges([user_mock_1, user_mock_2], [badge_mock_1, badge_mock_2])
     end
   end
 
   describe :first_awardable_badge do
     before do
-      HasBadges::Distribution.stubs(:user_awardable_with_badge?).with(user, @not_awardable_badge    = DryFactory.build(:badge)).returns false
+      Distribution.stubs(:user_awardable_with_badge?).with(user, @not_awardable_badge    = DryFactory.build(:badge)).returns false
     end
 
     it 'returns the first badges the given user can be awarded within the given badges' do
-      HasBadges::Distribution.stubs(:user_awardable_with_badge?).with(user, first_awardable_badge  = DryFactory.build(:badge)).returns true
-      HasBadges::Distribution.stubs(:user_awardable_with_badge?).with(user, second_awardable_badge = DryFactory.build(:badge)).returns true
+      Distribution.stubs(:user_awardable_with_badge?).with(user, first_awardable_badge  = DryFactory.build(:badge)).returns true
+      Distribution.stubs(:user_awardable_with_badge?).with(user, second_awardable_badge = DryFactory.build(:badge)).returns true
       badges = [first_awardable_badge, second_awardable_badge, @not_awardable_badge]
 
-      HasBadges::Distribution.first_awardable_badge(user, badges).must_equal first_awardable_badge
+      Distribution.first_awardable_badge(user, badges).must_equal first_awardable_badge
     end
 
     it 'returns nil if the user cannot be awarded with any of the given badges' do
       badges = [@not_awardable_badge]
       
-      HasBadges::Distribution.first_awardable_badge(user, badges).must_equal nil
+      Distribution.first_awardable_badge(user, badges).must_equal nil
     end
   end
 
@@ -54,9 +56,9 @@ describe HasBadges::Distribution do
     it 'awardable?: return true, award badge and reduce points with amount of points required by badge' do
       @user_created_10_points
       DryFactory.rollback_after_block do
-        HasBadges::Distribution.stubs(:user_awardable_with_badge?).with(user_created_10_points, badge_requiring_10_points).returns true  
+        Distribution.stubs(:user_awardable_with_badge?).with(user_created_10_points, badge_requiring_10_points).returns true  
         
-        HasBadges::Distribution.award_badge(user_created_10_points, badge_requiring_10_points).must_equal true
+        Distribution.award_badge(user_created_10_points, badge_requiring_10_points).must_equal true
         
         user_created_10_points.badges.must_equal [badge_requiring_10_points]
         user_created_10_points.points.must_equal 0
@@ -66,9 +68,9 @@ describe HasBadges::Distribution do
     it 'not awardable?: return false not award badge and not withdraw points' do
       @user_created_10_points
       DryFactory.rollback_after_block do
-        HasBadges::Distribution.stubs(:user_awardable_with_badge?).with(user_created_10_points, badge_requiring_10_points).returns false
+        Distribution.stubs(:user_awardable_with_badge?).with(user_created_10_points, badge_requiring_10_points).returns false
         
-        HasBadges::Distribution.award_badge(user_created_10_points, badge_requiring_10_points).must_equal false
+        Distribution.award_badge(user_created_10_points, badge_requiring_10_points).must_equal false
         
         user_created_10_points.badges.must_equal []
         user_created_10_points.points.must_equal 10
@@ -78,10 +80,10 @@ describe HasBadges::Distribution do
     it 'awardable? but Exception raised: return false not award badge and not reduce points' do
       @user_created_10_points
       DryFactory.rollback_after_block do
-        HasBadges::Distribution.stubs(:user_awardable_with_badge?).with(user_created_10_points, badge_requiring_10_points).returns true
+        Distribution.stubs(:user_awardable_with_badge?).with(user_created_10_points, badge_requiring_10_points).returns true
         Point.stubs(:create).raises 'someException'
 
-        HasBadges::Distribution.award_badge(user_created_10_points, badge_requiring_10_points).must_equal false
+        Distribution.award_badge(user_created_10_points, badge_requiring_10_points).must_equal false
 
         user_created_10_points.badges.must_equal []
         user_created_10_points.points.must_equal 10
@@ -92,21 +94,21 @@ describe HasBadges::Distribution do
   describe :user_awardable_with_badge? do
     it 'must return false if a parameter is nil' do
       # TODO: Improvement: raise exception instead
-      HasBadges::Distribution.user_awardable_with_badge?(nil, nil).must_equal false
+      Distribution.user_awardable_with_badge?(nil, nil).must_equal false
     end
 
     it 'must return true if user has more or equal than the number of points required by the badge and han\'t already this badge' do
-      HasBadges::Distribution.user_awardable_with_badge?(user_stubbed_10_points, badge_requiring_10_points).must_equal true
+      Distribution.user_awardable_with_badge?(user_stubbed_10_points, badge_requiring_10_points).must_equal true
     end
 
     it 'must return false if user has fewer points than required by the badge' do
-      HasBadges::Distribution.user_awardable_with_badge?(user_stubbed_10_points, badge_requiring_60_points).must_equal false
-      HasBadges::Distribution.user_awardable_with_badge?(user_stubbed_0_points, badge_requiring_10_points).must_equal false
+      Distribution.user_awardable_with_badge?(user_stubbed_10_points, badge_requiring_60_points).must_equal false
+      Distribution.user_awardable_with_badge?(user_stubbed_0_points, badge_requiring_10_points).must_equal false
     end
 
     it 'should return false if user already has the given badge' do
       user.stubs(:badges).returns([badge])
-      HasBadges::Distribution.user_awardable_with_badge?(user, badge).must_equal false
+      Distribution.user_awardable_with_badge?(user, badge).must_equal false
     end
   end
 end
