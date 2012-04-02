@@ -1,6 +1,5 @@
 require 'spec_helper'
 require 'rake'
-require 'mocha'
 
 describe "has_badge rake tasks" do
 	it 'distribute badges' do
@@ -12,7 +11,9 @@ describe "has_badge rake tasks" do
     Rake::Task.define_task(:environment)
 
     @rake[@task_name].wont_equal nil
-    HasBadges::Distribution.expects(:distribute_to).with(:all).returns(true)
+
+    HasBadges::Distribution.expects(:distribute_badges)
+    
     silence(:stdout) do
       @rake[@task_name].invoke
     end

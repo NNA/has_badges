@@ -5,11 +5,15 @@ if defined?(Rails) && Rails::VERSION::MAJOR == 3
 
     class Railtie < Rails::Railtie
     
-       initializer "include HasBadgesExtensions within ORM" do
-         ActiveSupport.on_load(:active_record) do
-           ActiveRecord::Base.send(:include, HasBadges::HasBadgesExtensions)
-         end
-       end
+      initializer "include HasBadgesExtensions within ORM" do
+        ActiveSupport.on_load(:active_record) do
+          ActiveRecord::Base.send(:include, HasBadges::HasBadgesExtensions)
+        end
+      end
+
+      rake_tasks do
+        Dir.glob(File.join(File.dirname(__FILE__), '../tasks/*.rake')).each { |r| import r }
+      end
     
     end
   end

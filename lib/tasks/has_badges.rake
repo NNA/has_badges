@@ -1,17 +1,17 @@
 namespace :has_badges do
+  
+  task :require => :environment do
+    begin
+      require 'has_badges'
+    rescue LoadError => e
+      raise e
+    end
+  end
+
   desc "Refreshes Badges for all users"
-  task :distribute_badges => :environment do
-  	puts 'Starting badge distribution'
-    # errors = []
-    HasBadges::Distribution.distribute_to(:all)
-    # names.each do |name|
-    #   # Paperclip.each_instance_with_attachment(klass, name) do |instance|
-    #   #   instance.send(name).reprocess!(*styles)
-    #   #   errors << [instance.id, instance.errors] unless instance.errors.blank?
-    #   # end
-    #   puts 'toto'
-    # end
-    # errors.each{|e| puts "#{e.first}: #{e.last.full_messages.inspect}" }
-    puts 'Done badge distribution'
+  task :distribute_badges => ['has_badges:require'] do |t, args|
+  	puts "Badge distribution: Started at #{Time.now}"
+    HasBadges::Distribution.distribute_badges
+    puts "Badge distribution: Ended at #{Time.now}"
   end
 end

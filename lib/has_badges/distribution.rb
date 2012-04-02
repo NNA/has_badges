@@ -1,7 +1,9 @@
+require_relative  '../generators/install/templates/model/badge'
+require_relative  'helper'
+
 module HasBadges
   class Distribution
-
-    def self.distribute_badges users, badges
+    def self.distribute_badges users=User.all, badges=Badge.all
       users.each do |user|
         award_badge user, first_awardable_badge(user, badges) 
       end
