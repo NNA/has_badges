@@ -22,12 +22,15 @@ describe Distribution do
   
   describe :initialize do
     it 'must create a new instance of Distribution and set users and badges info as accessible instance methods' do
-      distrib = Distribution.new('users', 'badges')
-      distrib.users.must_equal 'users'
-      distrib.badges.must_equal 'badges'
+      distrib = Distribution.new(['users', 'tab'], ['badges', 'tab'])
+      distrib.users.must_equal  ['users', 'tab']
+      distrib.badges.must_equal ['badges', 'tab']
     end
+
     it 'given no args must set users and badges to all' do
-      User.stubs(:all).returns('all_users') ; Badge.stubs(:all).returns('all_badges')
+      User.stubs(:joins).with(:badges).returns('all_users')
+      Badge.stubs(:scoped).returns('all_badges')
+
       distrib = Distribution.new
       distrib.users.must_equal 'all_users'
       distrib.badges.must_equal 'all_badges'
@@ -35,15 +38,17 @@ describe Distribution do
   end
 
   describe :distribute_badges do
+    describe 'given no strategy, must distribute best_awardable_badge' do
+    end
     it 'award the first_possible_badge in the given list of badges to all given users' do
       distrib = Distribution.new([user_mock_1= mock('user'), user_mock_2= mock('user')], 
-                                 [badge_mock_1 = mock('badge'), badge_mock_2 = mock('badge')])
+                                 [badge_requiring_60_points, badge_requiring_10_points])
 
-      Distribution.expects(:first_awardable_badge).with(user_mock_1, anything).once.returns(badge_mock_1)
-      Distribution.expects(:first_awardable_badge).with(user_mock_2, anything).once.returns(badge_mock_2)
+      Distribution.expects(:first_awardable_badge).with(user_mock_1, [badge_requiring_10_points, badge_requiring_60_points]).once.returns(badge_requiring_10_points)
+      Distribution.expects(:first_awardable_badge).with(user_mock_2, [badge_requiring_10_points, badge_requiring_60_points]).once.returns(badge_requiring_60_points)
 
-      Distribution.expects(:award_badge).with(user_mock_1, badge_mock_1).once.returns true
-      Distribution.expects(:award_badge).with(user_mock_2, badge_mock_2).once.returns true 
+      Distribution.expects(:award_badge).with(user_mock_1, badge_requiring_10_points).once.returns true
+      Distribution.expects(:award_badge).with(user_mock_2, badge_requiring_60_points).once.returns true 
       
       distrib.distribute_badges
     end

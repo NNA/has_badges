@@ -5,12 +5,20 @@ module HasBadges
   class Distribution
     attr_reader :users, :badges
 
-    def initialize users=User.all, badges=Badge.all
-      @users = users
-      @badges = badges
+    def initialize *p
+      @users = p[0].nil? ? User.joins(:badges) : p[0]
+      @badges = p[1].nil? ? Badge.scoped : p[1]
     end
 
-    def distribute_badges
+    def distribute_badges strategy='first'
+      #reorder_badges_following_strategy! :first
+      if strategy == 'first' 
+        @badges = @badges.respond_to?(:where) ? @badges.order(:required_points) : @badges.sort! { |a,b| a.required_points <=> b.required_points }
+        # @badges = @badges.order(:required_points)
+      elsif strategy == 'best'
+        @badges = @badges.order(:required_points).reverse_order
+      end
+        
       @users.each do |user|
         Distribution.award_badge user, Distribution.first_awardable_badge(user, @badges) 
       end
