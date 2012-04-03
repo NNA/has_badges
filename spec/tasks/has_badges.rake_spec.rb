@@ -12,7 +12,7 @@ describe "has_badge rake tasks" do
 
     @rake[@task_name].wont_equal nil
 
-    HasBadges::Distribution.expects(:distribute_badges)
+    HasBadges::Distribution.expects(:new).returns(mock('distri', :distribute_badges => true))
     
     silence(:stdout) do
       @rake[@task_name].invoke

@@ -11,7 +11,8 @@ namespace :has_badges do
   desc "Refreshes Badges for all users"
   task :distribute_badges => ['has_badges:require'] do |t, args|
   	puts "Badge distribution: Started at #{Time.now}"
-    HasBadges::Distribution.distribute_badges
+    distri = HasBadges::Distribution.new
+    distri.distribute_badges
     puts "Badge distribution: Ended at #{Time.now}"
   end
 end

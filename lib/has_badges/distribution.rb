@@ -3,9 +3,16 @@ require_relative  'helper'
 
 module HasBadges
   class Distribution
-    def self.distribute_badges users=User.all, badges=Badge.all
-      users.each do |user|
-        award_badge user, first_awardable_badge(user, badges) 
+    attr_reader :users, :badges
+
+    def initialize users=User.all, badges=Badge.all
+      @users = users
+      @badges = badges
+    end
+
+    def distribute_badges
+      @users.each do |user|
+        Distribution.award_badge user, Distribution.first_awardable_badge(user, @badges) 
       end
     end
 

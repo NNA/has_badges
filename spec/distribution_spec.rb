@@ -19,16 +19,33 @@ describe Distribution do
   before do
     DryFactory.access_as_class_vars_from self, [:user_created_10_points]
   end
+  
+  describe :initialize do
+    it 'must create a new instance of Distribution and set users and badges info as accessible instance methods' do
+      distrib = Distribution.new('users', 'badges')
+      distrib.users.must_equal 'users'
+      distrib.badges.must_equal 'badges'
+    end
+    it 'given no args must set users and badges to all' do
+      User.stubs(:all).returns('all_users') ; Badge.stubs(:all).returns('all_badges')
+      distrib = Distribution.new
+      distrib.users.must_equal 'all_users'
+      distrib.badges.must_equal 'all_badges'
+    end
+  end
 
   describe :distribute_badges do
     it 'award the first_possible_badge in the given list of badges to all given users' do
-      Distribution.expects(:first_awardable_badge).with(user_mock_1= mock('user'), anything).once.returns(badge_mock_1 = mock('badge'))
-      Distribution.expects(:first_awardable_badge).with(user_mock_2= mock('user'), anything).once.returns(badge_mock_2 = mock('badge'))
+      distrib = Distribution.new([user_mock_1= mock('user'), user_mock_2= mock('user')], 
+                                 [badge_mock_1 = mock('badge'), badge_mock_2 = mock('badge')])
+
+      Distribution.expects(:first_awardable_badge).with(user_mock_1, anything).once.returns(badge_mock_1)
+      Distribution.expects(:first_awardable_badge).with(user_mock_2, anything).once.returns(badge_mock_2)
 
       Distribution.expects(:award_badge).with(user_mock_1, badge_mock_1).once.returns true
       Distribution.expects(:award_badge).with(user_mock_2, badge_mock_2).once.returns true 
       
-      Distribution.distribute_badges([user_mock_1, user_mock_2], [badge_mock_1, badge_mock_2])
+      distrib.distribute_badges
     end
   end
 
