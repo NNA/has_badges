@@ -105,11 +105,9 @@ class DryFactory
     ActiveRecord::Base.transaction do
       begin
         yield
-      ensure
-        raise 'someError'
+        raise ActiveRecord::Rollback, "rollback after block"
       end
     end
-  rescue
   end
   
 end
